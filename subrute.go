@@ -58,8 +58,8 @@ func test(username, candidate string) {
 	c := exec.Command("su", "-c", "id", username)
 	f, err := pty.Start(c)
 	if err != nil {
-		time.Sleep(2 * time.Second)
-		test(username, candidate)
+		time.Sleep(2 * time.Second) // unsucessful attempt to solve issue
+		test(username, candidate)   // jokes on me for thinking 'temporarily' means temporarily
 		return
 	}
 
