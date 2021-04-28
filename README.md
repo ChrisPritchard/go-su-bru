@@ -2,9 +2,9 @@
 
 Go based su password bruteforcer
 
-Still a work in progress - running into some sort of ulimit or file handler issue.
+Still a work in progress - various aspects could be improved, but seems to work well
 
-Currently has a sole dependency on `github.com/creack/pty`
+Unix only, and currently has a sole dependency on `golang.org/x/sys/unix`
 
 ## Testing
 
@@ -19,8 +19,3 @@ then to run:
 
 `go run subrute.go hakanbey ./adanalist.txt`
 
-currently at around 23k-33k into the list, it will crash with:
-
-`fork/exec /bin/su: resource temporarily unavailable`
-
-or various issues of that nature.
