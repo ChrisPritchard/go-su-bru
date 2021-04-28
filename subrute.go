@@ -51,6 +51,7 @@ func main() {
 		}()
 	}
 
+	log.Println("starting...")
 	processPasswords(passwordFile, tasks)
 
 	close(tasks)
@@ -87,7 +88,7 @@ func testCandidate(username, candidate string, pty, tty *os.File) {
 		log.Fatal(err)
 	}
 
-	buffer := make([]byte, 30)
+	buffer := make([]byte, 50)
 	pty.Read(buffer) // text 'Password: '
 	pty.Write([]byte(candidate + "\n"))
 	pty.Read(buffer)         // new line
