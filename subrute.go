@@ -16,12 +16,20 @@ import (
 func main() {
 	log.SetFlags(0)
 	if len(os.Args) < 3 {
-		log.Fatal("args: username passwordfile")
+		log.Fatal("args: username passwordfile [batchsize - defaults 256]")
 	}
 
 	username := os.Args[1]
 	passwordFile := os.Args[2]
 	batchSize := 256
+	if len(os.Args) == 4 {
+		res, err := strconv.Atoi(os.Args[3])
+		if err != nil {
+			batchSize = 256
+		} else {
+			batchSize = res
+		}
+	}
 
 	tasks := make(chan string, batchSize)
 	var wg sync.WaitGroup
