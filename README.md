@@ -6,6 +6,8 @@ Still a work in progress - various aspects could be improved, but seems to work 
 
 Unix only, and currently has a sole dependency on `golang.org/x/sys/unix`
 
+DONT USE FOR ILLEGAL PURPOSES - if only because this is not exactly stealthy.
+
 ## Testing
 
 Create a new user, and give them a password from adanalist.txt (this is originally from a boot2root). For example, using a password at about position 47k:
