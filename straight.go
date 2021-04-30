@@ -46,6 +46,7 @@ func main() {
 	log.Println(string(buffer[:n]))
 	n, _ = pty.Read(buffer) // either id text or failure
 	log.Println(string(buffer[:n]))
+	c.Wait()
 
 	if n > 0 && strings.HasPrefix(string(buffer), "uid=") {
 		log.Printf("success with %s\n", password)
@@ -53,7 +54,6 @@ func main() {
 	}
 
 	c = exec.Command("su", "-c", "id", username)
-	defer c.Wait()
 	c.Stdout = tty
 	c.Stderr = tty
 	c.Stdin = tty
@@ -71,6 +71,7 @@ func main() {
 	log.Println(string(buffer[:n]))
 	n, _ = pty.Read(buffer) // either id text or failure
 	log.Println(string(buffer[:n]))
+	c.Wait()
 
 	if n > 0 && strings.HasPrefix(string(buffer), "uid=") {
 		log.Printf("success with %s\n", password)
