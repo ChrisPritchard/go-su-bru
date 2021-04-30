@@ -88,7 +88,7 @@ func testCandidate(username, candidate string, pty, tty *os.File) {
 		log.Fatal(err)
 	}
 
-	buffer := make([]byte, 50)
+	buffer := make([]byte, 100)
 	pty.Read(buffer) // text 'Password: '
 	pty.Write([]byte(candidate + "\n"))
 	pty.Read(buffer)         // new line
