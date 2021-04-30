@@ -2,32 +2,41 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 	"unsafe"
 
 	"golang.org/x/sys/unix"
 )
 
+var batchSize = 256
+var commandTimeout = 3
+
 func main() {
 	log.SetFlags(0)
 	if len(os.Args) < 3 {
-		log.Fatal("args: username passwordfile [batchsize - defaults 256]")
+		log.Fatal("args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 5 (seconds)]")
 	}
 
 	username := os.Args[1]
 	passwordFile := os.Args[2]
-	batchSize := 256
+
 	if len(os.Args) == 4 {
 		res, err := strconv.Atoi(os.Args[3])
-		if err != nil {
-			batchSize = 256
-		} else {
+		if err == nil {
 			batchSize = res
+		}
+	}
+	if len(os.Args) == 5 {
+		res, err := strconv.Atoi(os.Args[4])
+		if err == nil {
+			commandTimeout = res
 		}
 	}
 
@@ -78,8 +87,12 @@ func processPasswords(passwordFile string, tasks chan string) {
 }
 
 func testCandidate(username, candidate string, pty, tty *os.File) {
-	c := exec.Command("su", "-c", "id", username)
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Duration(commandTimeout)*time.Second)
+	defer cancelFn()
+
+	c := exec.CommandContext(ctx, "su", "-c", "id", username)
 	defer c.Wait()
+
 	c.Stdout = tty
 	c.Stderr = tty
 	c.Stdin = tty
