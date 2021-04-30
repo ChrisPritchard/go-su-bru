@@ -106,8 +106,10 @@ func testCandidate(username, candidate string, pty, tty *os.File) {
 	n, _ := pty.Read(buffer)
 	for {
 		result := string(buffer[:n])
-		if strings.HasPrefix(result, "Password:") {
+		if strings.Contains(result, "Password:") {
 			break
+		} else if strings.Trim(result, "\r\n") != "" {
+			log.Fatal("unexpected response: " + result)
 		}
 		n, _ = pty.Read(buffer)
 	}
