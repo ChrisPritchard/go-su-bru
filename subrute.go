@@ -117,11 +117,13 @@ func testCandidate(username, candidate string, pty, tty *os.File) {
 	n, _ = pty.Read(buffer)
 	for {
 		result := string(buffer[:n])
-		if strings.HasPrefix(result, "su: Authentication failure") {
+		if strings.Contains(result, "Authentication failure") {
 			break
-		} else if strings.HasPrefix(result, "uid=") {
+		} else if strings.Contains(result, "uid=") {
 			log.Printf("success with %s\n", candidate)
 			os.Exit(0)
+		} else if strings.Trim(result, "\r\n") != "" {
+			log.Fatal("unexpected response: " + result)
 		}
 		n, _ = pty.Read(buffer)
 	}
