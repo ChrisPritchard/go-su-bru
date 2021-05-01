@@ -21,7 +21,7 @@ var commandTimeout = 3
 func main() {
 	log.SetFlags(0)
 	if len(os.Args) < 3 {
-		log.Fatal("args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 5 (seconds)]")
+		log.Fatal("args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 3 (seconds)]")
 	}
 
 	username := os.Args[1]
