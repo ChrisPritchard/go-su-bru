@@ -14,10 +14,24 @@ Create a new user, and give them a password from adanalist.txt (this is original
 
 ```
 sudo useradd hakanbey
-echo -e "123adanacurly\n123adanacurly" | sudo passwd hakanbey
+echo -e "123adanamotown\n123adanamotown" | sudo passwd hakanbey
 ```
 
-then to run:
+then to run (directly invoking the script):
 
-`go run subrute.go hakanbey ./adanalist.txt`
+`go run gosubru.go hakanbey ./adanalist.txt`
 
+Additional options: if you specify a third param you can set the number of agents at once (the default is 256).
+
+If you specify a *fourth* param you can specify the timeout limit for each su instance (default is 5 seconds):
+
+`args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 5 (seconds)]`
+
+## building
+
+nothing special about compiling this, just make sure you have the unix lib installed:
+
+```bash
+go get -u golang.org/x/sys/unix
+go build -o gosubru gosubru.go
+```
