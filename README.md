@@ -16,7 +16,7 @@ Additional options: if you specify a third param you can set the number of agent
 
 If you specify a *fourth* param you can specify the timeout limit for each su instance (default is 5 seconds):
 
-`args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 5 (seconds)]`
+`args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 3 (seconds)]`
 
 ## Building
 
