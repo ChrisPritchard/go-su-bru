@@ -10,16 +10,16 @@ DONT USE FOR ILLEGAL PURPOSES - if only because this is not exactly stealthy.
 
 ## Testing
 
-Create a new user, and give them a password from adanalist.txt (this is originally from a boot2root). For example, using a password at about position 47k:
+Create a new user, and give them a password from wordlist.txt (this is originally from a boot2root). For example, using a password at about position 47k:
 
 ```
-sudo useradd hakanbey
-echo -e "123adanamotown\n123adanamotown" | sudo passwd hakanbey
+sudo useradd testuser
+echo -e "motown\nmotown" | sudo passwd testuser
 ```
 
 then to run (directly invoking the script):
 
-`go run gosubru.go hakanbey ./adanalist.txt`
+`go run gosubru.go testuser ./wordlist.txt`
 
 Additional options: if you specify a third param you can set the number of agents at once (the default is 256).
 
