@@ -1,23 +1,14 @@
 # go-su-bru
 
-Go based su password bruteforcer
-
-Still a work in progress - various aspects could be improved, but seems to work well
+Go based su password bruteforcer - uses goroutines to start multiple pseudoterminals, then just run password candidates against su in each terminal over and over.
 
 Unix only, and currently has a sole dependency on `golang.org/x/sys/unix`
 
 DONT USE FOR ILLEGAL PURPOSES - if only because this is not exactly stealthy.
 
-## Testing
+## Usage
 
-Create a new user, and give them a password from wordlist.txt (this is originally from a boot2root). For example, using a password at about position 47k:
-
-```
-sudo useradd testuser
-echo -e "motown\nmotown" | sudo passwd testuser
-```
-
-then to run (directly invoking the script):
+Directly invoking the script:
 
 `go run gosubru.go testuser ./wordlist.txt`
 
@@ -27,7 +18,7 @@ If you specify a *fourth* param you can specify the timeout limit for each su in
 
 `args: username passwordfile [batchsize - defaults 256] [command timeout - defaults 5 (seconds)]`
 
-## building
+## Building
 
 nothing special about compiling this, just make sure you have the unix lib installed:
 
